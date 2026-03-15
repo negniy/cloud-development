@@ -1,13 +1,12 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
-using PatientApp.Models;
 using System.Text.Json;
+using PatientApp.Generator.Services;
+using PatientApp.Generator.Models;
 
-namespace PatientApp.Services;
-
-public class CompanyEmployeeService(
+public class PatientService(
     PatientGenerator generator,
     IDistributedCache cache,
-    ILogger<CompanyEmployeeService> logger,
+    ILogger<PatientService> logger,
     IConfiguration config
 )
 {

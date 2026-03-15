@@ -1,9 +1,9 @@
 ﻿using Bogus;
 using Bogus.DataSets;
 using static System.Math;
-using PatientApp.Models;
+using PatientApp.Generator.Models;
 
-namespace PatientApp.Services;
+namespace PatientApp.Generator.Services;
 
 public class PatientGenerator(ILogger<PatientGenerator> logger)
 {

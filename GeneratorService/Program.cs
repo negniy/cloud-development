@@ -1,25 +1,58 @@
+using PatientApp.Generator.Services;
+using PatientApp.ServiceDefaults;
+using Serilog;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.AddServiceDefaults();
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.AddRedisDistributedCache("redis");
+
+builder.Services.AddSingleton<PatientGenerator>();
+builder.Services.AddScoped<PatientService>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.UseCors();
+app.UseSerilogRequestLogging();
+
+app.MapDefaultEndpoints();
+
+app.MapGet("/patient", async (
+    int id,
+    PatientService service,
+    ILogger<Program> logger,
+    CancellationToken cancellationToken) =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    logger.LogInformation($"Received request for company employee with ID: {id}");
 
-app.UseHttpsRedirection();
+    if (id <= 0)
+    {
+        logger.LogWarning($"Received invalid ID: {id}");
+        return Results.BadRequest(new { error = "ID must be a positive number" });
+    }
 
-app.UseAuthorization();
-
-app.MapControllers();
+    try
+    {
+        var application = await service.GetByIdAsync(id, cancellationToken);
+        return Results.Ok(application);
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Error while getting company employee {Id}", id);
+        return Results.Problem("An error occurred while processing the request");
+    }
+})
+.WithName("GetPatient");
 
 app.Run();

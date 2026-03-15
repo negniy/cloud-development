@@ -1,5 +1,4 @@
-﻿namespace PatientApp.Models;
-using static Bogus.DataSets.Name;
+﻿namespace PatientApp.Generator.Models;
 
 public class Patient
 {
