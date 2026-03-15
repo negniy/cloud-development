@@ -8,7 +8,7 @@ public class Patient
     public DateOnly Birthday { get; set; }
     public string Address { get; set; }
 
-    public double Hight { get; set; }
+    public double Height { get; set; }
     public double Weight { get; set; }
 
     public int BloodType { get; set; }

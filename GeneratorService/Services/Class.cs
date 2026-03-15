@@ -1,19 +1,48 @@
-﻿namespace PatientApp.Services;
-using Bogus;
+﻿using Microsoft.Extensions.Caching.Distributed;
 using PatientApp.Models;
+using System.Text.Json;
 
-public class PatientGenerator
+namespace PatientApp.Services;
+
+public class CompanyEmployeeService(
+    PatientGenerator generator,
+    IDistributedCache cache,
+    ILogger<CompanyEmployeeService> logger,
+    IConfiguration config
+)
 {
-    public List<Patient> Generate(int count)
+    private readonly TimeSpan _cacheExpiration = TimeSpan.FromMinutes(config.GetSection("CacheSetting").GetValue("CacheExpirationMinutes", 5));
+    private const string CacheKeyPrefix = "patient:";
+
+    public async Task<Patient> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        var faker = new Faker<Patient>()
-            .RuleFor(p => p.Id, f => Guid.NewGuid())
-            .RuleFor(p => p.Name, f => f.Name.FirstName())
-            .RuleFor(p => p.Surname, f => Guid.NewGuid())
-            .RuleFor(p => p.Patronymic, f => Guid.NewGuid())
-            .RuleFor(p => p.Birthday, f => Guid.NewGuid())
-            .RuleFor(p => p.Gender, f => Guid.NewGuid())
-            .RuleFor(p => p.Diagnosis, f => Guid.NewGuid())
-            .RuleFor(p => p.Address, f => Guid.NewGuid())
+        var cacheKey = $"{CacheKeyPrefix}{id}";
+
+        logger.LogInformation($"Patient with Id: {id} was requested");
+
+        var cachedData = await cache.GetStringAsync(cacheKey, cancellationToken);
+
+        if (!string.IsNullOrEmpty(cachedData))
+        {
+            logger.LogInformation($"Patient with {id} was found in cache");
+            var cachedPatient = JsonSerializer.Deserialize<Patient>(cachedData);
+            if (cachedPatient != null) return cachedPatient;
+        }
+
+        logger.LogInformation($"Patient with {id} was found in cache, start generating");
+
+        var patient = generator.Generate(id);
+
+        var serializedData = JsonSerializer.Serialize(patient);
+        var cacheOptions = new DistributedCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = _cacheExpiration
+        };
+
+        await cache.SetStringAsync(cacheKey, serializedData, cacheOptions, cancellationToken);
+
+        logger.LogInformation($"Patint with Id: {id} was saved to cache with TTL {_cacheExpiration.TotalMinutes} minutes");
+
+        return patient;
     }
 }
