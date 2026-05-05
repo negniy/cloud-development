@@ -7,13 +7,14 @@ var redis = builder.AddRedis("redis")
 
 var gatewayPort = builder.Configuration.GetValue<int>("GatewayPort");
 var gateway = builder
-    .AddProject<Projects.PatientApp_Gateway>("patientapp-gateway")
+    .AddProject<Projects.PatientApp_Gateway>("gateway")
     .WithExternalHttpEndpoints();
 
-for (var i = 0; i < 3; ++i)
+for (var i = 1; i <= 3; ++i)
 {
-    var currGenerator = builder.AddProject<Projects.PatientApp_Generator>($"generator-{i + 1}")
-        .WithEndpoint("http", endpoint => endpoint.Port = gatewayPort + 1 + i)
+    var currGenerator = builder.AddProject<Projects.PatientApp_Generator>
+        ($"generator-{i}")
+        .WithEndpoint("http", endpoint => endpoint.Port = gatewayPort + i)
         .WithReference(redis)
         .WaitFor(redis);
 

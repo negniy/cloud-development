@@ -6,15 +6,9 @@ using Ocelot.ServiceDiscovery.Providers;
 
 namespace PatientApp.Gateway.LoadBalancer;
 
-public class QueryBasedLoadBalancer : ILoadBalancer
+public class QueryBasedLoadBalancer(IServiceDiscoveryProvider serviceDiscovery) : ILoadBalancer
 {
-    private readonly IServiceDiscoveryProvider _serviceDiscovery;
-
-    public QueryBasedLoadBalancer(IServiceDiscoveryProvider serviceDiscovery)
-    {
-        _serviceDiscovery = serviceDiscovery;
-    }
-
+    private readonly IServiceDiscoveryProvider _serviceDiscovery = serviceDiscovery;
     public string Type => "QueryBasedLoadBalancer";
 
     public async Task<Response<ServiceHostAndPort>> LeaseAsync(HttpContext httpContext)

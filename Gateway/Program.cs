@@ -1,8 +1,11 @@
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using PatientApp.Gateway.LoadBalancer;
+using PatientApp.ServiceDefaults;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
 
 builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
 
@@ -30,12 +33,16 @@ builder.Services
     .AddCustomLoadBalancer((route, serviceDiscovery) =>
         new QueryBasedLoadBalancer(serviceDiscovery));
 
+var allowedOrigins = builder.Configuration
+    .GetSection("Cors:AllowedOrigins")
+    .Get<string[]>();
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
+    options.AddPolicy("AllowClient", policy =>
     {
         policy
-            .AllowAnyOrigin()
+            .WithOrigins(allowedOrigins!)
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -43,7 +50,7 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-app.UseCors("AllowAll");
+app.UseCors("AllowClient");
 
 await app.UseOcelot();
 
