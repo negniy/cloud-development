@@ -100,7 +100,15 @@ Patient with id: X was found in cache
 <details>
   Ответ клиенту
 <img width="1534" height="861" alt="Ответ клиенту" src="https://github.com/user-attachments/assets/23cc8f99-ef49-4937-894f-8cce0d3506ac" />
-
+</details>
+<details>
+<img width="1853" height="950" alt="image" src="https://github.com/user-attachments/assets/bfb23b20-be78-4ff8-bfa9-0e19cc3955f8" />
+</details>
+<details>
+  <img width="1826" height="902" alt="image" src="https://github.com/user-attachments/assets/4243f34b-655c-4c27-9574-bf8b89491a7a" />
+  </details>
+<details>
+  <img width="1558" height="903" alt="image" src="https://github.com/user-attachments/assets/b1e8e1f8-06e4-48bc-b4fd-2707f2a343f8" />
 </details>
 <details>
   Трассировки
