@@ -19,6 +19,8 @@ public class AppHostFixture : IAsyncLifetime
 
         await App.StartAsync();
 
+        await Task.Delay(TimeSpan.FromSeconds(60));
+
         await App.ResourceNotifications.WaitForResourceHealthyAsync("gateway").WaitAsync(TimeSpan.FromMinutes(3));
         await App.ResourceNotifications.WaitForResourceHealthyAsync("generator-1").WaitAsync(TimeSpan.FromMinutes(3));
         await App.ResourceNotifications.WaitForResourceHealthyAsync("generator-2").WaitAsync(TimeSpan.FromMinutes(3));
