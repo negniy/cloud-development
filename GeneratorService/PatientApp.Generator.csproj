@@ -7,13 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" Version="13.1.2" />
+    <PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" Version="13.3.0" />
+    <PackageReference Include="AWSSDK.SimpleNotificationService" Version="4.0.2.30" />
+    <PackageReference Include="AWSSDK.SQS" Version="4.0.2.28" />
     <PackageReference Include="Bogus" Version="35.6.5" />
-    <PackageReference Include="Serilog" Version="4.3.2-dev-02419" />
+    <PackageReference Include="LocalStack.Client.Extensions" Version="2.0.0" />
+    <PackageReference Include="MassTransit" Version="9.2.0-develop.138" />
+    <PackageReference Include="MassTransit.Abstractions" Version="9.2.0-develop.138" />
+    <PackageReference Include="MassTransit.AmazonSQS" Version="9.2.0-develop.138" />
+    <PackageReference Include="Serilog" Version="4.3.2-dev-02430" />
     <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
     <PackageReference Include="Serilog.Sinks.OpenTelemetry" Version="4.2.1-nblumhardt-02317" />
-    <PackageReference Include="StackExchange.Redis" Version="2.12.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="StackExchange.Redis" Version="3.0.2-preview" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.7" />
   </ItemGroup>
 
   <ItemGroup>

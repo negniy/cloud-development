@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatientApp.ServiceDefaults"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatientApp.Gateway", "Gateway\PatientApp.Gateway.csproj", "{AB6410EA-A027-B523-756F-6E77D0CA6F6B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatientApp.EventSink", "EventSink\PatientApp.EventSink.csproj", "{1DE31765-8D5C-4397-AF8C-829B6DB5B6F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "IntegrationTests\IntegrationTests.csproj", "{01005A69-2B7C-4F8D-9C05-A060D4AB80EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{AB6410EA-A027-B523-756F-6E77D0CA6F6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB6410EA-A027-B523-756F-6E77D0CA6F6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB6410EA-A027-B523-756F-6E77D0CA6F6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DE31765-8D5C-4397-AF8C-829B6DB5B6F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DE31765-8D5C-4397-AF8C-829B6DB5B6F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DE31765-8D5C-4397-AF8C-829B6DB5B6F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DE31765-8D5C-4397-AF8C-829B6DB5B6F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01005A69-2B7C-4F8D-9C05-A060D4AB80EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01005A69-2B7C-4F8D-9C05-A060D4AB80EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01005A69-2B7C-4F8D-9C05-A060D4AB80EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01005A69-2B7C-4F8D-9C05-A060D4AB80EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

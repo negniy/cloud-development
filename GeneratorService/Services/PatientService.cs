@@ -1,13 +1,17 @@
-﻿using Microsoft.Extensions.Caching.Distributed;
-using System.Text.Json;
-using PatientApp.Generator.Services;
+﻿using Amazon.SQS;
+using MassTransit;
+using MassTransit.Transports;
+using Microsoft.Extensions.Caching.Distributed;
 using PatientApp.Generator.Models;
+using PatientApp.Generator.Services;
+using System.Text.Json;
 
 public class PatientService(
     PatientGenerator generator,
     IDistributedCache cache,
     ILogger<PatientService> logger,
-    IConfiguration config
+    IConfiguration config,
+    IPublishEndpoint publishEndpoint
 )
 {
     private readonly TimeSpan _cacheExpiration = TimeSpan.FromMinutes(config.GetSection("CacheSetting").GetValue("CacheExpirationMinutes", 5));
@@ -29,9 +33,10 @@ public class PatientService(
             if (cachedPatient != null) return cachedPatient;
         }
 
-        logger.LogInformation("Patient with {id} was found in cache, start generating", id);
+        logger.LogInformation("Patient with {id} was not found in cache, start generating", id);
 
         var patient = generator.Generate(id);
+        await publishEndpoint.Publish(patient);
 
         var serializedData = JsonSerializer.Serialize(patient);
         var cacheOptions = new DistributedCacheEntryOptions
