@@ -1,13 +1,15 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
-using System.Text.Json;
-using PatientApp.Generator.Services;
+using PatientApp.Generator.Messaging;
 using PatientApp.Generator.Models;
+using PatientApp.Generator.Services;
+using System.Text.Json;
 
 public class PatientService(
     PatientGenerator generator,
     IDistributedCache cache,
     ILogger<PatientService> logger,
-    IConfiguration config
+    IConfiguration config,
+    SnsPublisherService publisher
 )
 {
     private readonly TimeSpan _cacheExpiration = TimeSpan.FromMinutes(config.GetSection("CacheSetting").GetValue("CacheExpirationMinutes", 5));
@@ -32,6 +34,8 @@ public class PatientService(
         logger.LogInformation("Patient with {id} was found in cache, start generating", id);
 
         var patient = generator.Generate(id);
+
+        await publisher.PublishPatientAsync(patient);
 
         var serializedData = JsonSerializer.Serialize(patient);
         var cacheOptions = new DistributedCacheEntryOptions

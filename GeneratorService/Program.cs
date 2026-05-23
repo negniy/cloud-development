@@ -1,3 +1,9 @@
+using Amazon;
+using Amazon.Extensions.NETCore.Setup;
+using Amazon.Runtime;
+using Amazon.SimpleNotificationService;
+using LocalStack.Client.Extensions;
+using PatientApp.Generator.Messaging;
 using PatientApp.Generator.Services;
 using PatientApp.ServiceDefaults;
 using Serilog;
@@ -5,6 +11,20 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
+
+builder.Services.AddAwsService<IAmazonSimpleNotificationService>(); //AddAwsService
+builder.Services.AddScoped<SnsPublisherService>();
+
+builder.Services.AddDefaultAWSOptions(new AWSOptions
+{
+    Credentials = new BasicAWSCredentials("test", "test"),
+    Region = RegionEndpoint.EUCentral1,
+    DefaultClientConfig =
+    {
+        ServiceURL = "http://localhost:4566"
+    }
+});
+builder.Services.AddLocalStack(builder.Configuration);
 
 builder.AddRedisDistributedCache("redis");
 
