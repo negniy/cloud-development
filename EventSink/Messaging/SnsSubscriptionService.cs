@@ -2,24 +2,24 @@
 using Amazon.SimpleNotificationService.Model;
 using System.Net;
 
-namespace EventSink1.Messaging;
+namespace EventSink.Messaging;
 
 public class SnsSubscriptionService(IAmazonSimpleNotificationService snsClient, IConfiguration configuration, ILogger<SnsSubscriptionService> logger)
 {
-    private readonly string _topicArn = configuration["AWS:Resources:SNSTopicArn"]
-        ?? throw new KeyNotFoundException("SNSTopicArn not found in configuration");
-
     public async Task SubscribeEndpoint()
     {
-        logger.LogInformation("Отправка запроса на подписку к {topic}", _topicArn);
+        logger.LogInformation("Создание темы SNS");
+        var createResponse = await snsClient.CreateTopicAsync("patient-topic");
+
+        logger.LogInformation("Отправка запроса на подписку к {topic}", createResponse.TopicArn);
 
         var endpoint = configuration["AWS:Resources:SNSUrl"] ?? "http://localhost:4566";
 
         var request = new SubscribeRequest
         {
-            TopicArn = _topicArn,
+            TopicArn = createResponse.TopicArn,
             Protocol = "http",
-            Endpoint = $"{endpoint}/api/sns",   // вебхук
+            Endpoint = $"{endpoint}/api/sns",
             ReturnSubscriptionArn = true
         };
 

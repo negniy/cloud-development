@@ -1,7 +1,5 @@
 ﻿using Aspire.Hosting.Testing;
-using PatientApp.Generator.Models;
 using System.Net;
-using System.Text.Json;
 
 namespace Tests;
 
@@ -35,7 +33,7 @@ public class IntegrationTests(Fixture fixture)
         await client.GetAsync($"/patient?id={id}");
 
         var objects =
-            await fixture.WaitForObjectAsync("landplot_");
+            await fixture.WaitForObjectAsync("patient_");
 
         Assert.NotEmpty(objects);
     }

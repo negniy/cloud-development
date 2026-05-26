@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Nodes;
 
-namespace EventSink1.Storage;
+namespace EventSink.Storage;
 
 public interface IS3Service
 {

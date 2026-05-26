@@ -1,13 +1,14 @@
-﻿using Amazon.SimpleNotificationService.Util;
-using EventSink1.Storage;
+﻿using Amazon.SimpleNotificationService;
+using Amazon.SimpleNotificationService.Util;
+using EventSink.Storage;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
 
-namespace EventSink1.Controllers;
+namespace EventSink.Controllers;
 
 [ApiController]
 [Route("api/sns")]
-public class SnsSubscriberController(IS3Service s3Service, ILogger<SnsSubscriberController> logger) : ControllerBase
+public class SnsSubscriberController(IS3Service s3Service, ILogger<SnsSubscriberController> logger, IAmazonSimpleNotificationService snsClient) : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> ReceiveMessage()
@@ -25,8 +26,10 @@ public class SnsSubscriberController(IS3Service s3Service, ILogger<SnsSubscriber
             {
                 logger.LogInformation("Получено подтверждение подписки");
                 using var httpClient = new HttpClient();
-                var response = await httpClient.GetAsync(snsMessage.SubscribeURL);
-                logger.LogInformation("Подписка подтверждена: {status}", response.StatusCode);
+                var response = await snsClient.ConfirmSubscriptionAsync(
+                                                    snsMessage.TopicArn,
+                                                    snsMessage.Token);
+                logger.LogInformation("Подписка подтверждена");
                 return Ok();
             }
 

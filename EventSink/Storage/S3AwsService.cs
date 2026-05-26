@@ -3,11 +3,11 @@ using Amazon.S3.Model;
 using Amazon.S3.Util;
 using System.Text.Json.Nodes;
 
-namespace EventSink2.Storage;
+namespace EventSink.Storage;
 
 public class S3AwsService(IAmazonS3 s3Client, ILogger<S3AwsService> logger) : IS3Service
 {
-    private const string BucketName = "landplot-bucket";
+    private const string BucketName = "patient-bucket";
 
     public async Task EnsureBucketExists()
     {
@@ -32,7 +32,7 @@ public class S3AwsService(IAmazonS3 s3Client, ILogger<S3AwsService> logger) : IS
 
     public async Task UploadFile(string jsonContent)
     {
-        var key = $"landplot_{DateTime.UtcNow:yyyyMMddHHmmss}_{Guid.NewGuid():N}.json";
+        var key = $"patient_{DateTime.UtcNow:yyyyMMddHHmmss}_{Guid.NewGuid():N}.json";
 
         var request = new PutObjectRequest
         {

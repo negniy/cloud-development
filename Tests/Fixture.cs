@@ -7,7 +7,7 @@ namespace Tests;
 
 public class Fixture : IAsyncLifetime
 {
-    private const string BucketName = "landplot-bucket";
+    private const string BucketName = "patient-bucket";
 
     public DistributedApplication App { get; private set; } = null!;
 
@@ -29,13 +29,13 @@ public class Fixture : IAsyncLifetime
         using var cts = new CancellationTokenSource(TimeSpan.FromMinutes(2));
 
         await Task.WhenAll(
-            App.ResourceNotifications.WaitForResourceHealthyAsync("landplot-localstack", cts.Token),
+            App.ResourceNotifications.WaitForResourceHealthyAsync("patient-localstack", cts.Token),
             App.ResourceNotifications.WaitForResourceHealthyAsync("gateway", cts.Token),
-            App.ResourceNotifications.WaitForResourceHealthyAsync("landplot-sink", cts.Token)
+            App.ResourceNotifications.WaitForResourceHealthyAsync("patient-sink", cts.Token)
         );
 
         var localStackUrl = App
-            .GetEndpoint("landplot-localstack", "http")
+            .GetEndpoint("patient-localstack", "http")
             .ToString()
             .TrimEnd('/');
 

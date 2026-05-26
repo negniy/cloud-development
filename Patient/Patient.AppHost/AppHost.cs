@@ -17,7 +17,7 @@ var awsConfig = builder.AddAWSSDKConfig()
     .WithRegion(RegionEndpoint.EUCentral1);
 
 var localStack = builder
-.AddLocalStack("landplot-localstack", awsConfig: awsConfig, configureContainer: container =>
+.AddLocalStack("patient-localstack", awsConfig: awsConfig, configureContainer: container =>
 {
     container.Lifetime = ContainerLifetime.Session;
     container.DebugLevel = 1;
@@ -29,7 +29,7 @@ var localStack = builder
     .Add("SNS_CERT_URL_HOST", "sns.eu-central-1.amazonaws.com");
 });
 
-var eventSink = builder.AddProject<Projects.EventSink2>("landplot-sink")
+var eventSink = builder.AddProject<Projects.EventSink>("patient-sink")
     .WithHttpEndpoint(port: 5261, name: "sns")
     .WithReference(localStack)
     .WaitFor(localStack);
@@ -42,16 +42,13 @@ for (var i = 1; i <= 3; ++i)
         .WithReference(redis)
         .WaitFor(redis)
         .WithReference(localStack)
-        .WaitFor(localStack);
+        .WaitFor(localStack)
+        .WaitFor(eventSink);
 
     gateway
         .WithReference(currGenerator)
         .WaitFor(currGenerator);
 }
-
-gateway
-    .WithReference(eventSink)
-    .WaitFor(eventSink);
 
 builder.AddProject<Projects.Client_Wasm>("client")
     .WithReference(gateway)

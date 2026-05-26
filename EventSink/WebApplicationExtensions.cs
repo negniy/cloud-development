@@ -1,7 +1,7 @@
-﻿using EventSink1.Messaging;
-using EventSink1.Storage;
+﻿using EventSink.Messaging;
+using EventSink.Storage;
 
-namespace EventSink1;
+namespace EventSink;
 
 internal static class WebApplicationExtensions
 {

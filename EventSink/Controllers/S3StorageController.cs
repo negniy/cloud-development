@@ -1,9 +1,9 @@
-﻿using EventSink1.Storage;
+﻿using EventSink.Storage;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using System.Text.Json.Nodes;
 
-namespace EventSink1.Controllers;
+namespace EventSink.Controllers;
 
 [ApiController]
 [Route("api/s3")]

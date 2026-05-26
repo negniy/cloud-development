@@ -7,7 +7,7 @@ namespace PatientApp.Generator.Messaging;
 public class SnsPublisherService(IAmazonSimpleNotificationService snsClient, IConfiguration config, ILogger<SnsPublisherService> logger)
 {
     private readonly string _topicArn = config["AWS:Resources:SNSTopicArn"]
-        ?? "arn:aws:sns:us-east-1:000000000000:landplot-topic";
+        ?? "arn:aws:sns:us-east-1:000000000000:patient-topic";
 
     public async Task PublishPatientAsync(Patient patient)
     {
